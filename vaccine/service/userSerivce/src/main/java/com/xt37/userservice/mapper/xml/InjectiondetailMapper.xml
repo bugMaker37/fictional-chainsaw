@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xt37.userservice.mapper.InjectiondetailMapper">
+
+
+    <select id="selectDetail" resultType="com.xt37.userservice.entity.vo.injectionQuery">
+        SELECT * from user u ,hospital h  ,veccines v where
+            u.userId in (SELECT userId from injectiondetail)
+        and
+            h.userId in (SELECT userId from hospital )
+        and
+            v.vaccinesId in(select vaccinesId from veccines)
+    </select>
+</mapper>
