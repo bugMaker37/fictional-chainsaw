@@ -43,7 +43,7 @@ public class User implements Serializable {
     private String avatar;
 
     @ApiModelProperty(value = "删除")
-    private Integer isDelete;
+    private Integer status;
 
     @ApiModelProperty(value = "注射状态 0：未注射 1：注射第一次 2：注射第二次")
     private Integer type;

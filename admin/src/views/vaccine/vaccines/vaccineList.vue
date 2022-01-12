@@ -10,11 +10,7 @@
       </el-form-item>
 
       <el-form-item>
-        <el-select
-          v-model="vaccineQuery.type"
-          clearable
-          placeholder="注射次数"
-        >
+        <el-select v-model="vaccineQuery.type" clearable placeholder="注射次数">
           <el-option :value="1" label="第一次" />
           <el-option :value="2" label="第二次" />
         </el-select>
@@ -62,20 +58,15 @@
 
       <el-table-column prop="hospital" label="医院名称" width="160" />
 
-      <el-table-column prop="vaccinesBrand" label="疫苗品牌" width="160"/>
-   
+      <el-table-column prop="vaccinesBrand" label="疫苗品牌" width="160" />
 
       <el-table-column prop="price" label="价格" width="160" />
 
       <el-table-column prop="stock" label="库存" width="160" />
+      
+      <el-table-column prop="type" label="疫苗注射次数" width="160" />
 
-      <el-table-column label="疫苗注射次数" width="160">
-        <template slot-scope="type">
-          {{ list.type === 1 ? "第二次" : "第一次" }}
-        </template>
-      </el-table-column>
-
-<el-table-column prop="gmtCreate" label="添加时间" width="180" />
+      <el-table-column prop="gmtCreate" label="添加时间" width="180" />
       <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
           <router-link :to="'/vaccine/edit/' + scope.row.vaccinesId">
@@ -102,7 +93,6 @@
       style="padding: 30px 0; text-align: center;"
       layout="total, prev, pager, next, jumper"
       @current-change="getList"
-
     />
   </div>
 </template>
@@ -118,7 +108,7 @@ export default {
       page: 1,
       limit: 10,
       vaccineQuery: {},
-      hospitalId:"1435595684282707970"
+      hospitalId: "1435595684282707970"
     };
   },
 
@@ -133,11 +123,23 @@ export default {
     getList(page = 1) {
       this.page = page;
       vaccine
-        .getVaccineList(this.hospitalId,this.vaccineQuery)
+        .getVaccineList(this.hospitalId, this.vaccineQuery)
         .then(response => {
           //接口返回的数据
           //console.log(response);
           this.list = response.data.records;
+           this.list = response.data.records;
+          for (let index = 0; index < this.list.length; index++) {
+            var detail = this.list[index];
+            const type = detail.type;
+            if (type == 1) {
+              detail.type = "第一次";
+            } else if (type == 2) {
+              detail.type = "第二次";
+            } else if (type == 3) {
+              detail.type = "第三次";
+            }
+          }
           this.total = response.data.total;
           console.log(this.list);
           console.log(this.total);
@@ -155,15 +157,14 @@ export default {
 
     //删除方法
     removeDataById(id) {
-      // debugger
-      // console.log(memberId)
+      console.log(id);
       this.$confirm("此操作将永久删除该记录, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          return teacher.removeById(id);
+          return vaccine.delete(id);
         })
         .then(() => {
           this.getList();

@@ -45,7 +45,7 @@ public class Banner implements Serializable {
     private Date gmtModified;
 
     @ApiModelProperty(value = "删除")
-    private Integer isDelete;
+    private Integer status;
 
 
 }

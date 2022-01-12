@@ -1,13 +1,10 @@
 package com.xt37.userservice.controller;
 
-
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xt37.commentUtils.R;
 import com.xt37.userservice.entity.Veccines;
 import com.xt37.userservice.entity.vo.vaccineQuery;
 import com.xt37.userservice.service.VeccinesService;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +12,7 @@ import java.util.List;
 
 /**
  * <p>
- * å‰ç«¯æ§åˆ¶å™¨
+ * Ç°¶Ë¿ØÖÆÆ÷
  * </p>
  *
  * @author xt37
@@ -29,7 +26,7 @@ public class VeccinesController {
     @Autowired
     private VeccinesService veccineService;
 
-    //æŸ¥è¯¢å¸¦åˆ†é¡µ
+    //²éÑ¯´ø·ÖÒ³
     @PostMapping("getPageList/{hospitalId}")
     public R vaccine(@PathVariable String hospitalId,
                      @RequestBody vaccineQuery vaccineQuery) {
@@ -45,7 +42,7 @@ public class VeccinesController {
         return veccines != null ? R.ok().data("vaccine", veccines) : R.error();
     }
 
-    //æ·»åŠ ç–«è‹—ä¿¡æ¯
+    //Ìí¼ÓÒßÃçĞÅÏ¢
     @PostMapping("save")
     public R save(@RequestBody Veccines veccines) {
         boolean save = veccineService.save(veccines);

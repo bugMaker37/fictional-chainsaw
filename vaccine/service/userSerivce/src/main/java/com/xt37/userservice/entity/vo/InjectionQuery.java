@@ -5,7 +5,9 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class injectionQuery {
+public class InjectionQuery {
+
+    private String injectionId;
 
     //患者名字
     private String userName;

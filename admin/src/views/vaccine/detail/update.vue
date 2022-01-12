@@ -1,33 +1,64 @@
 <template>
   <div class="app-container">
     <el-form label-width="120px">
-      <el-form-item label="疫苗品牌">
-        <el-input style="width: 500px;" v-model="vaccine.vaccinesBrand" />
+      <el-form-item label="用户">
+        <el-input
+          v-model="detail.userName"
+          style="width: 500px"
+          readonly="true"
+        />
       </el-form-item>
+      <el-form-item label="疫苗品牌" prop="brand">
+        <el-select style="width: 500px" v-model="brand" @change="change">
+          <el-option
+            v-for="(v, key) in this.vaccine"
+            :key="key"
+            :label="v.vaccinesBrand"
+            :value="v.vaccinesBrand"
+            >{{ v.vaccinesBrand }}</el-option
+          >
+        </el-select>
+      </el-form-item>
+
       <el-form-item label="发布医院">
-        <el-input style="width: 500px;" v-model="vaccine.hospital" />
+        <el-input style="width: 500px" v-model="detail.hospitalName" />
       </el-form-item>
-      <el-form-item label="注射次数" >
-        <el-select v-model="vaccine.type" style="width: 500px;" clearable placeholder="请选择">
+      <el-form-item label="注射次数">
+        <el-select
+          v-model="detail.type"
+          style="width: 500px"
+          clearable
+          placeholder="请选择"
+        >
           <!--
             数据类型一定要和取出的json中的一致，否则没法回填
             因此，这里value使用动态绑定的值，保证其数据类型是number
           -->
           <el-option :value="1" label="第一次" />
           <el-option :value="2" label="第二次" />
+          <el-option :value="3" label="第三次" />
         </el-select>
       </el-form-item>
-      <el-form-item label="库存" >
-        <el-input v-model="vaccine.stock" style="width: 500px;" />
+
+      <el-form-item label="价格">
+        <el-input
+          v-model="vaccine[key].price"
+          style="width: 500px"
+          :rows="10"
+        />
       </el-form-item>
-      <el-form-item label="价格" >
-        <el-input v-model="vaccine.price" style="width: 500px;" :rows="10" />
+      <el-form-item label="备注">
+        <el-input
+          v-model="detail.description"
+          style="width: 500px"
+          :rows="10"
+        />
       </el-form-item>
 
       <!-- 讲师头像 -->
       <el-form-item label="疫苗图片">
         <!-- 头衔缩略图 -->
-        <pan-thumb :image="vaccine.img" />
+        <pan-thumb :image="vaccine[key].img" />
         <!-- 文件上传按钮 -->
         <el-button
           type="primary"
@@ -67,7 +98,7 @@
   </div>
 </template>
 <script>
-import vaccine from "@/api/vaccine/vaccine";
+import detail from "@/api/vaccine/detail";
 import ImageCropper from "@/components/ImageCropper";
 import PanThumb from "@/components/PanThumb";
 export default {
@@ -75,18 +106,32 @@ export default {
   data() {
     return {
       vaccine: {
-        vaccinesId : "",
+        vaccinesId: "",
         hospital: "",
         vaccinesBrand: 0,
         type: 1,
         price: "",
         stock: "",
-        img: ""
+        img: "",
       },
+      detail: {
+        injectionId: "",
+        userId: "",
+        hospitalId: "",
+        hospital_name: "",
+        vaccineId: "",
+        vaccine_name: "",
+        user_name: "",
+        brand: "",
+        description: "",
+        type: "",
+        gmt_modified: "",
+      },
+      key: 0,
       imagecropperKey: 0,
-      imagecropperShow: false,
-      saveBtnDisabled: false, // 保存按钮是否禁用,
-      BASE_API: process.env.BASE_API
+      // imagecropperShow: false,
+      // saveBtnDisabled: false, // 保存按钮是否禁用,
+      BASE_API: process.env.BASE_API,
     };
   },
 
@@ -98,10 +143,13 @@ export default {
     $route(to, from) {
       console.log("watch $route");
       this.init();
-    }
+    },
   },
 
   methods: {
+    change() {
+      this.$forceUpdate(); //其作用就是强制性刷新了一次
+    },
     //关闭上传弹框的方法
     close() {
       this.imagecropperShow = false;
@@ -122,17 +170,20 @@ export default {
     init() {
       if (this.$route.params && this.$route.params.id) {
         const id = this.$route.params.id;
+        console.log(id);
         this.fetchDataById(id);
       } else {
         // 使用对象拓展运算符，拷贝对象，而不是引用，
         // 否则新增一条记录后，defaultForm就变成了之前新增的teacher的值
         this.vaccine = {};
+        this.detail = {};
       }
     },
     //添加或更新用户
     saveOrUpdate() {
       this.saveBtnDisabled = true;
-      if (this.vaccine.vaccinesId == "") {
+      debugger;
+      if (!this.detail.vaccinesId) {
         this.saveData();
       } else {
         this.updateTeacher();
@@ -143,63 +194,64 @@ export default {
     saveData() {
       vaccine
         .save(this.vaccine)
-        .then(response => {
+        .then((response) => {
           return this.$message({
             type: "success",
-            message: "保存成功!"
+            message: "保存成功!",
           });
         })
-        .then(resposne => {
+        .then((resposne) => {
           this.$router.push({ path: "/vaccine/vaccineList" });
         })
-        .catch(response => {
+        .catch((response) => {
           // console.log(response)
           this.$message({
             type: "error",
-            message: "保存失败"
+            message: "保存失败",
           });
         });
     },
-
 
     // 根据id查询记录
     fetchDataById(id) {
-      vaccine
+      detail
         .getById(id)
-        .then(response => {
-          this.vaccine = response.data.vaccine;
+        .then((response) => {
+          this.detail = response.data.detail;
+          this.vaccine = response.data.veccines;
+          console.log(this.vaccine);
+          console.log(this.detail);
         })
-        .catch(response => {
+        .catch((response) => {
           this.$message({
             type: "error",
-            message: "获取数据失败"
+            message: "获取数据失败",
           });
         });
     },
-
 
     //修改讲师的方法
     updateTeacher() {
       this.saveBtnDisabled = true;
       vaccine
         .updateTeacher(this.vaccine)
-        .then(response => {
+        .then((response) => {
           return this.$message({
             type: "success",
-            message: "修改成功!"
+            message: "修改成功!",
           });
         })
-        .then(resposne => {
+        .then((resposne) => {
           this.$router.push({ path: "/vaccine/vaccineList" });
         })
-        .catch(response => {
+        .catch((response) => {
           // console.log(response)
           this.$message({
             type: "error",
-            message: "保存失败"
+            message: "保存失败",
           });
         });
-    }
-  }
+    },
+  },
 };
 </script>

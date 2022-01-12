@@ -3,7 +3,7 @@
 <mapper namespace="com.xt37.userservice.mapper.InjectiondetailMapper">
 
 
-    <select id="selectDetail" resultType="com.xt37.userservice.entity.vo.injectionQuery">
+    <select id="selectDetail" resultType="com.xt37.userservice.entity.vo.InjectionQuery">
         SELECT * from user u ,hospital h  ,veccines v where
             u.userId in (SELECT userId from injectiondetail)
         and

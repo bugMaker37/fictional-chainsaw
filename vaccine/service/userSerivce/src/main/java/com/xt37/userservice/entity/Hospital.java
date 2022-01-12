@@ -2,10 +2,14 @@ package com.xt37.userservice.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+
 import java.util.Date;
+
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
+
 import java.io.Serializable;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -14,7 +18,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author xt37
@@ -23,7 +27,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="Hospital对象", description="")
+@ApiModel(value = "Hospital对象", description = "")
 public class Hospital implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,13 +47,16 @@ public class Hospital implements Serializable {
     private String avatar;
 
     @ApiModelProperty(value = "删除")
-    private Integer isDelete;
+    private Integer status;
 
     @ApiModelProperty(value = "医院电话")
     private String phone;
 
     @ApiModelProperty(value = "医院地址")
     private String address;
+
+    @ApiModelProperty(value = "账号区分")
+    private String userType;
 
     @ApiModelProperty(value = "插入时间")
     @TableField(fill = FieldFill.INSERT)

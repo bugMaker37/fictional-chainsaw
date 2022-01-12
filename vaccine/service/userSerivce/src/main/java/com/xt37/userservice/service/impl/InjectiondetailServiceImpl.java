@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xt37.userservice.entity.Injectiondetail;
 import com.xt37.userservice.entity.Veccines;
-import com.xt37.userservice.entity.vo.injectionQuery;
+import com.xt37.userservice.entity.vo.InjectionQuery;
 import com.xt37.userservice.entity.vo.vaccineQuery;
 import com.xt37.userservice.mapper.HospitalMapper;
 import com.xt37.userservice.mapper.InjectiondetailMapper;
@@ -15,9 +15,6 @@ import com.xt37.userservice.mapper.VeccinesMapper;
 import com.xt37.userservice.service.InjectiondetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>
@@ -43,11 +40,9 @@ public class InjectiondetailServiceImpl extends ServiceImpl<InjectiondetailMappe
 
     @Override
     public IPage<Injectiondetail> getPage(String hospitalId, vaccineQuery vaccineQuery, int current, int limit) {
-        injectionQuery injectionQuery = new injectionQuery();
+        InjectionQuery injectionQuery = new InjectionQuery();
         Page<Injectiondetail> page = new Page<>(current, limit);
-
         QueryWrapper<Injectiondetail> wrapper = new QueryWrapper<>();
-
         wrapper.eq("hospitalId", hospitalId);
         //根据条件查询 再wrapper中添加查询条件
         if (vaccineQuery.getType() != null) {
@@ -55,16 +50,12 @@ public class InjectiondetailServiceImpl extends ServiceImpl<InjectiondetailMappe
         }
 
         IPage<Injectiondetail> iPage = this.page(page, wrapper);
-
-
         return iPage;
     }
 
     @Override
-    public void updateInjectionById(String injectionId, injectionQuery injectionQuery) {
+    public void updateInjectionById(String injectionId, InjectionQuery injectionQuery) {
         Veccines veccines = veccinesMapper.selectById(injectionId);
-
-
     }
 
 }

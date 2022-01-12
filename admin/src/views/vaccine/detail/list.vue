@@ -52,7 +52,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="hospName" label="医院名称" width="160">
+      <el-table-column prop="hospitalName" label="医院名称" width="160">
       </el-table-column>
 
       <el-table-column prop="userName" label="用户名称" width="160" />
@@ -63,16 +63,13 @@
 
       <el-table-column prop="injectionTime" label="注射时间" width="160" />
 
-      <el-table-column label="type" width="160">
-        <template slot-scope="type">
-          {{ list.type === 1 ? "第二次" : "第一次" }}
-        </template>
-      </el-table-column>
+      <el-table-column prop="type" label="疫苗注射次数" width="160" />
 
       <el-table-column prop="gmtCreate" label="添加时间" width="180" />
       <el-table-column label="操作" width="200" align="center">
         <template slot-scope="scope">
-          <router-link :to="'/vaccine/edit/' + scope.row.vaccinesId">
+        
+          <router-link :to="'/detail/edit/' + scope.row.injectionId">
             <el-button type="primary" size="mini" icon="el-icon-edit"
               >修改</el-button
             >
@@ -93,7 +90,7 @@
       :current-page="page"
       :page-size="limit"
       :total="total"
-      style="padding: 30px 0; text-align: center;"
+      style="padding: 30px 0; text-align: center"
       layout="total, prev, pager, next, jumper"
       @current-change="getList"
     />
@@ -111,10 +108,9 @@ export default {
       page: 1,
       limit: 10,
       vaccineQuery: {},
-      hospitalId: "1435595684282707970"
+      hospitalId: "1435595684282707970",
     };
   },
-
   created() {
     // 当页面加载时获取数据 在页面渲染之前执行
     this.getList();
@@ -125,12 +121,12 @@ export default {
     open() {
       this.$alert("这是一段内容", "标题名称", {
         confirmButtonText: "确定",
-        callback: action => {
+        callback: (action) => {
           this.$message({
             type: "info",
-            message: `action: ${action}`
+            message: `action: ${action}`,
           });
-        }
+        },
       });
     },
 
@@ -140,15 +136,25 @@ export default {
       this.page = page;
       detail
         .getVaccineList(this.hospitalId, this.vaccineQuery)
-        .then(response => {
+        .then((response) => {
           //接口返回的数据
-          //console.log(response);
           this.list = response.data.records;
+          for (let index = 0; index < this.list.length; index++) {
+            var detail = this.list[index];
+            const type = detail.type;
+            if (type == 1) {
+              detail.type = "第一次";
+            } else if (type == 2) {
+              detail.type = "第二次";
+            } else if (type == 3) {
+              detail.type = "第三次";
+            }
+          }
           this.total = response.data.total;
           console.log(this.list);
           console.log(this.total);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -166,7 +172,7 @@ export default {
       this.$confirm("此操作将永久删除该记录, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           return teacher.removeById(id);
@@ -175,24 +181,24 @@ export default {
           this.getList();
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "删除成功!",
           });
         })
-        .catch(response => {
+        .catch((response) => {
           // 失败
           if (response === "cancel") {
             this.$message({
               type: "info",
-              message: "已取消删除"
+              message: "已取消删除",
             });
           } else {
             this.$message({
               type: "error",
-              message: "删除失败"
+              message: "删除失败",
             });
           }
         });
-    }
-  }
+    },
+  },
 };
 </script>

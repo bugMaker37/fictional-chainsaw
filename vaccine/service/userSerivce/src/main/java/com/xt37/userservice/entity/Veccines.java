@@ -54,7 +54,7 @@ public class Veccines implements Serializable {
     private Integer stock;
 
     @ApiModelProperty(value = "删除")
-    private Integer isDelete;
+    private Integer status;
 
     @ApiModelProperty(value = "插入时间")
     @TableField(fill = FieldFill.INSERT)

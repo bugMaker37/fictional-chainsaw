@@ -72,17 +72,25 @@ export const constantRouterMap = [
     meta: { title: '预约信息', icon: 'example' },
     children: [
       {
-        path: 'vaccineList',
+        path: 'VaccineList',
         name: '预约信息',
         component: () => import('@/views/vaccine/detail/list'),
         meta: { title: '预约信息', icon: 'table' }
       },
       {
-        path: 'vaccineList',
-        name: '预约信息',
-        component: () => import('@/views/vaccine/detail/list'),
-        meta: { title: '预约信息', icon: 'table' }
-      }
+        path: 'addVaccine',
+        name: '预约信息添加',
+        component: () => import('@/views/vaccine/detail/update'),
+        meta: { title: '预约信息添加', icon: 'table' }
+      },
+      {
+        path: 'edit/:id',
+        name: '更新预约信息',
+        component: () => import('@/views/vaccine/detail/update'),
+        meta: { title: '更新预约信息', icon: 'table' },
+        hidden: true
+      },
+
     ]
   },
 

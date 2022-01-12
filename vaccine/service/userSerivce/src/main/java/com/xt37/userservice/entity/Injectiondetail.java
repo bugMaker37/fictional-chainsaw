@@ -2,10 +2,14 @@ package com.xt37.userservice.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+
 import java.util.Date;
+
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
+
 import java.io.Serializable;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -14,7 +18,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author xt37
@@ -23,7 +27,7 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@ApiModel(value="Injectiondetail对象", description="")
+@ApiModel(value = "Injectiondetail对象", description = "")
 public class Injectiondetail implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,12 +44,20 @@ public class Injectiondetail implements Serializable {
     @TableField("hospitalId")
     private String hospitalId;
 
+    private String hospitalName;
+
     @ApiModelProperty(value = "注射疫苗的信息id")
     @TableField("vaccineId")
     private String vaccineId;
 
+    private String VaccineName;
+
+    private String userName;
+
+    private String brand;
+
     @ApiModelProperty(value = "描述")
-    private String decriptioin;
+    private String description;
 
     @ApiModelProperty(value = "注射时间")
     @TableField("injectionTime")
@@ -55,7 +67,7 @@ public class Injectiondetail implements Serializable {
     private Integer type;
 
     @ApiModelProperty(value = "删除")
-    private Integer isDelete;
+    private Integer status;
 
     @ApiModelProperty(value = "插入时间")
     @TableField(fill = FieldFill.INSERT)

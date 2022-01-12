@@ -5,20 +5,17 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xt37.commentUtils.R;
 import com.xt37.userservice.entity.Injectiondetail;
-import com.xt37.userservice.entity.vo.injectionQuery;
+import com.xt37.userservice.entity.Veccines;
+import com.xt37.userservice.entity.vo.InjectionQuery;
 import com.xt37.userservice.entity.vo.vaccineQuery;
 import com.xt37.userservice.mapper.HospitalMapper;
-import com.xt37.userservice.mapper.InjectiondetailMapper;
 import com.xt37.userservice.mapper.UserMapper;
 import com.xt37.userservice.mapper.VeccinesMapper;
 import com.xt37.userservice.service.InjectiondetailService;
-import com.xt37.userservice.service.UserService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -55,49 +52,41 @@ public class InjectiondetailController {
         return R.ok().data("list", list);
     }
 
-    //条件查询代分页
-    @PostMapping("getPagelist/{hospitalId}")
+    /**
+     * 条件查询带分页
+     *
+     * @param hospitalId
+     * @param vaccineQuery
+     * @return
+     */
+    @PostMapping("getPageList/{hospitalId}")
     public R getPageList(@PathVariable String hospitalId,
                          @RequestBody vaccineQuery vaccineQuery) {
         IPage page = injectionService.getPage(hospitalId, vaccineQuery, 1, 8);
         long total = page.getTotal();
         List records = page.getRecords();
-
-        List<injectionQuery> list = new ArrayList<>();
-
-        for (int i = 0; i < records.size(); ++i) {
-            injectionQuery query = new injectionQuery();
-
-            Injectiondetail injectiondetail = (Injectiondetail) records.get(i);
-
-            if (userMapper.selectById(injectiondetail.getUserId()) != null) {
-                query.setUserName(userMapper.selectById(injectiondetail.getUserId()).getUserName());
-            }
-            if (hospitalMapper.selectById(injectiondetail.getHospitalId()) != null) {
-                query.setHospName(hospitalMapper.selectById(injectiondetail.getHospitalId()).getUserName());
-            }
-            if (veccinesMapper.selectById(injectiondetail.getVaccineId()) != null) {
-                query.setVaccineName(veccinesMapper.selectById(injectiondetail.getVaccineId()).getVaccinesBrand());
-            }
-            query.setInjectionTime(injectiondetail.getInjectionTime());
-            query.setDescription(injectiondetail.getDecriptioin());
-            query.setType(injectiondetail.getType());
-            query.setGmtCreate(injectiondetail.getGmtCreate());
-            query.setGmtModified(injectiondetail.getGmtModified());
-
-            System.out.println(query);
-            list.add(query);
-        }
         return R.ok().data("total", total).data("records", records);
     }
 
-
+    /**
+     * 更新详细信息
+     *
+     * @param injectionId
+     * @param injectionQuery
+     * @return
+     */
     @PostMapping("update/{injectionId}")
     public R updateInjection(@PathVariable String injectionId,
-                             @RequestBody injectionQuery injectionQuery) {
-        injectionService.updateInjectionById(injectionId,injectionQuery);
-
+                             @RequestBody InjectionQuery injectionQuery) {
+        injectionService.updateInjectionById(injectionId, injectionQuery);
         return R.ok();
+    }
+
+    @GetMapping("getDetail/{injectionId}")
+    public R getDetailById(@PathVariable String injectionId) {
+        Injectiondetail byId = injectionService.getById(injectionId);
+        List<Veccines> veccines = veccinesMapper.selectList(null);
+        return R.ok().data("detail", byId).data("veccines",veccines);
     }
 
 }
